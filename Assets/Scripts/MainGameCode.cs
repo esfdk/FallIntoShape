@@ -52,7 +52,8 @@ public class MainGameCode : MonoBehaviour {
 		rotationZ *= rotationSpeed * Time.deltaTime;
 
 		playObjects[activeObjectIndex].transform.Rotate(rotationZ, rotationY, 0);
-		playObjects[activeObjectIndex].transform.position += playObjects[activeObjectIndex].transform.forward * Time.deltaTime *5;
+		playObjects[activeObjectIndex].rigidbody.AddForce(playObjects[activeObjectIndex].transform.forward * Time.deltaTime *5, ForceMode.Force);
+		//playObjects[activeObjectIndex].rigidbody.MovePosition(playObjects[activeObjectIndex].rigidbody.position + playObjects[activeObjectIndex].transform.forward * Time.deltaTime *5);
 
 		// Camera movement
 		var p = playObjects[activeObjectIndex].transform.position;
@@ -69,7 +70,7 @@ public class MainGameCode : MonoBehaviour {
 		if(activeObjectIndex < playObjects.Count -1)
 		{
 			playObjects[activeObjectIndex].transform.position = originalPositions[activeObjectIndex];
-			activeObjectIndex++;
+			//activeObjectIndex++;
 			IncreaseScore();
 		}
 		else

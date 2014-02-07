@@ -27,8 +27,8 @@ public class MainGameCode : MonoBehaviour {
 
 		// Adds the objects to a list for easier control.
 		playObjects = new List<GameObject>();
-		playObjects.Add(GameObject.Find("Object_01(Star)"));
-		playObjects.Add(GameObject.Find("Object_02(Capsule)"));
+		playObjects.Add(GameObject.Find("Object_01"));
+		playObjects.Add(GameObject.Find("Object_02"));
 
 		// Add the object's initial positions to another list.
 		originalPositions = new List<Vector3>();

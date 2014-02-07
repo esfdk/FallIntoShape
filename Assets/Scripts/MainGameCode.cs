@@ -35,8 +35,8 @@ public class MainGameCode : MonoBehaviour {
 		playObjects.Add(GameObject.Find("Object_06"));
 		playObjects.Add(GameObject.Find("Object_07"));
 		playObjects.Add(GameObject.Find("Object_08"));
-		playObjects.Add(GameObject.Find("Object_09"));
-		playObjects.Add(GameObject.Find("Object_10"));
+		//playObjects.Add(GameObject.Find("Object_09"));
+		//playObjects.Add(GameObject.Find("Object_10"));
 
 		// Add the object's initial positions to another list.
 		originalPositions = new List<Vector3>();

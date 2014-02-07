@@ -94,6 +94,7 @@ public class MainGameCode : MonoBehaviour {
 		if(activeObjectIndex < playObjects.Count -1)
 		{
 			playObjects[activeObjectIndex].transform.position = originalPositions[activeObjectIndex];
+			playObjects[activeObjectIndex].rigidbody.velocity = Vector3.zero;
 			activeObjectIndex++;
 			
 			IncreaseScore();

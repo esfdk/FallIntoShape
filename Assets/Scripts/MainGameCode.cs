@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class MainGameCode : MonoBehaviour {
@@ -11,8 +12,10 @@ public class MainGameCode : MonoBehaviour {
 
 	private List<GameObject> playObjects;
 	private List<Vector3> originalPositions;
+	private Hashtable moveParams = new Hashtable();
 	private int currentScore = 0;
 	private float timeLeft, endTime;
+	private bool switchingObject;
 
 	/// <summary>
 	/// Start this instance.
@@ -20,11 +23,12 @@ public class MainGameCode : MonoBehaviour {
 	void Start () 
 	{
 		endText.enabled = false;
+		switchingObject = false;
 
 		// Adds the objects to a list for easier control.
 		playObjects = new List<GameObject>();
-		playObjects.Add(GameObject.Find("FirstObject(Star)"));
-		playObjects.Add(GameObject.Find("SecondObject(Capsule)"));
+		playObjects.Add(GameObject.Find("Object_01(Star)"));
+		playObjects.Add(GameObject.Find("Object_02(Capsule)"));
 
 		// Add the object's initial positions to another list.
 		originalPositions = new List<Vector3>();
@@ -64,9 +68,12 @@ public class MainGameCode : MonoBehaviour {
 		rotationZ *= rotationSpeed * Time.deltaTime;
 
 		// Move the current object.
-		playObjects[activeObjectIndex].transform.Rotate(rotationZ, rotationY, 0);
-		var v = playObjects[activeObjectIndex].transform.forward * Time.deltaTime * velocity;
-		playObjects[activeObjectIndex].rigidbody.velocity = v;
+		if (!switchingObject)
+		{
+			playObjects[activeObjectIndex].transform.Rotate(rotationZ, rotationY, 0);
+			var v = playObjects[activeObjectIndex].transform.forward * Time.deltaTime * velocity;
+			playObjects[activeObjectIndex].rigidbody.velocity = v;
+		}
 
 		// Camera movement
 		var p = playObjects[activeObjectIndex].transform.position;
@@ -79,22 +86,36 @@ public class MainGameCode : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Switch to the next object that is to be controlled.
+	/// Switch to the next play object.
 	/// </summary>
 	public void NextObject()
 	{
-		// Increase score no matter what.
-		IncreaseScore();
-
 		// If there are "levels" left, switch to the next one
 		if(activeObjectIndex < playObjects.Count -1)
 		{
 			playObjects[activeObjectIndex].transform.position = originalPositions[activeObjectIndex];
 			activeObjectIndex++;
+			
+			IncreaseScore();
+			PauseMovement(true);
+
+			// Use iTween to move camera to the next play object smoothly.
+			var temp = playObjects[activeObjectIndex].transform.position;
+			var tempVector = new Vector3(temp.x, temp.y + 5, temp.z);
+
+			moveParams.Add(iT.MoveTo.path, new Vector3[] {this.transform.position, tempVector});
+			moveParams.Add(iT.MoveTo.time, 1);
+			moveParams.Add(iT.MoveTo.easetype, "linear");
+			moveParams.Add(iT.MoveTo.oncompletetarget, this.gameObject);
+			moveParams.Add(iT.MoveTo.oncompleteparams, false);
+			moveParams.Add(iT.MoveTo.oncomplete, "PauseMovement");
+			
+			iTween.MoveTo(this.gameObject, moveParams);
 		}
 		// Else end the game.
 		else
 		{
+			IncreaseScore();
 			EndGame();
 		}
 	}
@@ -139,6 +160,15 @@ public class MainGameCode : MonoBehaviour {
 			ChainJam.AddPoints(currentScore);
 			ChainJam.GameEnd();
 		}
+	}
+
+	/// <summary>
+	/// Tells the current play object to pause movement based on the input.
+	/// </summary>
+	/// <param name="pause">If set to <c>true</c>, pause.</param>
+	private void PauseMovement(bool pause)
+	{
+		switchingObject = pause;
 	}
 
 	/// <summary>

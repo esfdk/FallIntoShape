@@ -46,7 +46,7 @@ public class MainGameCode : MonoBehaviour {
 			originalPositions.Add(new Vector3(p.x, p.y, p.z));
 		}
 
-		timeLeft = 50f;
+		timeLeft = playObjects.Count * 4;
 		endTime = 5f;
 	}
 	

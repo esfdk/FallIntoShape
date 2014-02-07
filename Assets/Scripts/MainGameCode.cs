@@ -8,7 +8,7 @@ public class MainGameCode : MonoBehaviour {
 	public float rotationSpeed = 100.0F;
 	public float velocity = 100.0F;
 	public float maxVelocity = 500f, minVelocity = 0f, velocityChange = 10f;
-	public GUIText timeText, scoreText, endText;
+	public GUIText timeText, scoreText, endText, endTimeText;
 
 	private List<GameObject> playObjects;
 	private List<Vector3> originalPositions;
@@ -23,6 +23,7 @@ public class MainGameCode : MonoBehaviour {
 	void Start () 
 	{
 		endText.enabled = false;
+		endTimeText.enabled = false;
 		switchingObject = false;
 
 		// Adds the objects to a list for easier control.
@@ -152,13 +153,18 @@ public class MainGameCode : MonoBehaviour {
 	/// </summary>
 	private void EndGame()
 	{
+		// In case the player gets through all levels, set the time to below the limit.
+		timeLeft = -1f;
+
 		// Set text
 		endText.text = "You managed to gather " + currentScore + " points!";
+		endTimeText.text = "The game will end in " + (int)endTime + " seconds!";
 
 		// Enabled the end text and disable the others
 		if (!endText.enabled)
 		{
 			endText.enabled = true;
+			endTimeText.enabled = true;
 			scoreText.enabled = false;
 			timeText.enabled = false;
 		}

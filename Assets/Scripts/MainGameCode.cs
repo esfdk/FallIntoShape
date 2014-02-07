@@ -29,6 +29,14 @@ public class MainGameCode : MonoBehaviour {
 		playObjects = new List<GameObject>();
 		playObjects.Add(GameObject.Find("Object_01"));
 		playObjects.Add(GameObject.Find("Object_02"));
+		playObjects.Add(GameObject.Find("Object_03"));
+		playObjects.Add(GameObject.Find("Object_04"));
+		playObjects.Add(GameObject.Find("Object_05"));
+		playObjects.Add(GameObject.Find("Object_06"));
+		playObjects.Add(GameObject.Find("Object_07"));
+		playObjects.Add(GameObject.Find("Object_08"));
+		playObjects.Add(GameObject.Find("Object_09"));
+		playObjects.Add(GameObject.Find("Object_10"));
 
 		// Add the object's initial positions to another list.
 		originalPositions = new List<Vector3>();
@@ -94,6 +102,7 @@ public class MainGameCode : MonoBehaviour {
 		if(activeObjectIndex < playObjects.Count -1)
 		{
 			playObjects[activeObjectIndex].transform.position = originalPositions[activeObjectIndex];
+			playObjects[activeObjectIndex].transform.rigidbody.velocity = Vector3.zero;
 			activeObjectIndex++;
 			
 			IncreaseScore();
@@ -103,6 +112,7 @@ public class MainGameCode : MonoBehaviour {
 			var temp = playObjects[activeObjectIndex].transform.position;
 			var tempVector = new Vector3(temp.x, temp.y + 5, temp.z);
 
+			moveParams = new Hashtable();
 			moveParams.Add(iT.MoveTo.path, new Vector3[] {this.transform.position, tempVector});
 			moveParams.Add(iT.MoveTo.time, 1);
 			moveParams.Add(iT.MoveTo.easetype, "linear");

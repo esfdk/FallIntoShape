@@ -77,7 +77,7 @@ public class MainGameCode : MonoBehaviour {
 		rotationZ *= rotationSpeed * Time.deltaTime;
 
 		// Move the current object.
-		if (!switchingObject)
+		if (!switchingObject && timeLeft > 0)
 		{
 			playObjects[activeObjectIndex].transform.Rotate(rotationZ, rotationY, 0);
 			var v = playObjects[activeObjectIndex].transform.forward * Time.deltaTime * velocity;
@@ -100,7 +100,7 @@ public class MainGameCode : MonoBehaviour {
 	public void NextObject()
 	{
 		// If there are "levels" left, switch to the next one
-		if(activeObjectIndex < playObjects.Count -1)
+		if(activeObjectIndex < playObjects.Count -1 && timeLeft > 0)
 		{
 			playObjects[activeObjectIndex].transform.position = originalPositions[activeObjectIndex];
 			playObjects[activeObjectIndex].rigidbody.velocity = Vector3.zero;
@@ -145,7 +145,7 @@ public class MainGameCode : MonoBehaviour {
 	/// </summary>
 	private void IncreaseScore()
 	{
-		if (currentScore < 10) currentScore++;
+		if (currentScore < 10 && timeLeft > 0) currentScore++;
 	}
 
 	/// <summary>
@@ -153,11 +153,15 @@ public class MainGameCode : MonoBehaviour {
 	/// </summary>
 	private void EndGame()
 	{
+		//Note score so it can't increase from other sources.
+		var cs = currentScore;
+		playObjects[activeObjectIndex].rigidbody.velocity = Vector3.zero;
+
 		// In case the player gets through all levels, set the time to below the limit.
 		timeLeft = -1f;
 
 		// Set text
-		endText.text = "You managed to gather " + currentScore + " points!";
+		endText.text = "You managed to gather " + cs + " points!";
 		endTimeText.text = "The game will end in " + (int)endTime + " seconds!";
 
 		// Enabled the end text and disable the others
@@ -173,7 +177,7 @@ public class MainGameCode : MonoBehaviour {
 		if (endTime > 0f) endTime -= Time.deltaTime;
 		if (endTime <= 0f)
 		{
-			ChainJam.AddPoints(currentScore);
+			ChainJam.AddPoints(cs);
 			ChainJam.GameEnd();
 		}
 	}
